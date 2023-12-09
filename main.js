@@ -1,7 +1,6 @@
-import Navigo from "navigo";
-import chat from "./chat";
-import login from "./login";
-import register from "./register";
+import chatPageContent from "./chat";
+import loginPageContent from "./login";
+import registerPageContent from "./register";
 import SendbirdChat from "@sendbird/chat";
 import {
 	GroupChannelModule,
@@ -17,10 +16,35 @@ import {
 	MessageModule
 } from '@sendbird/chat/message';
 
-const router = new Navigo('/');
+import constant from './constant'
+
+// Define content for each page
+const pages = {
+	login: loginPageContent,
+	register: registerPageContent,
+	chat: chatPageContent,
+};
+
+const routeChangeEvent = new Event('routechange');
+
+// Function to handle navigation based on the current route
+function handleNavigation(route) {
+	const content = document.getElementById('app');
+	content.innerHTML = pages[route] || "Page not found";
+	// Dispatch the custom event
+	document.dispatchEvent(routeChangeEvent);
+}
+
+// Set up routes using Director
+const router = new Router({
+	'/login': () => handleNavigation('login'),
+	'/register': () => handleNavigation('register'),
+	'/chat': () => handleNavigation('chat'),
+	'/main': () => handleNavigation('main'),
+});
 
 const sendbirdChat = SendbirdChat.init({
-	appId: "948F94B8-AD39-4EC1-9F8E-B2BB0FC0C708",
+	appId: constant.sendbirdAppId,
 	localCacheEnabled: true,
 	modules: [new GroupChannelModule(), new MessageModule]
 });
@@ -28,6 +52,7 @@ console.log("Sendbird: ", sendbirdChat)
 
 window.sb = sendbirdChat
 
-router.on('/login', login).resolve()
-
-// .on('/register', register).on('/home', login).resolve();
+document.addEventListener('DOMContentLoaded', function () {
+	console.log('DOMContentLoaded event triggered');
+	router.init('/login'); // Set the initial route
+});

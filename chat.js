@@ -13,8 +13,7 @@ import {
 import './style.css'
 import moment from "moment/moment";
 
-export default async function chat() {
-	document.querySelector('#app').innerHTML = `
+const chatPageContent = `
 		<div class="">
 			<div class="row">
 				<div class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3">
@@ -61,28 +60,28 @@ export default async function chat() {
 		</div>
 	`;
 
-	function userListsPlaceholderLoading() {
-		let userList = `
-			<div class="user-name-list user-name-list-face2">
-				<div class="author-name-details">
-					<div class="author-img img__skeleton __skeleton"></div>
-					<div class="author-name">
-						<div class="author-username username__skeleton __skeleton"></div>
-						<p id="last_message" class="last_message__skeleton __skeleton"></p>		
-					</div>
+function userListsPlaceholderLoading() {
+	let userList = `
+		<div class="user-name-list user-name-list-face2">
+			<div class="author-name-details">
+				<div class="author-img img__skeleton __skeleton"></div>
+				<div class="author-name">
+					<div class="author-username username__skeleton __skeleton"></div>
+					<p id="last_message" class="last_message__skeleton __skeleton"></p>		
 				</div>
 			</div>
-		`;
+		</div>
+	`;
 
-		let userLists = userList;
-		for (let index = 0; index < 6; index++) {
-			userLists += userList;
-		}
-		return userLists;
+	let userLists = userList;
+	for (let index = 0; index < 6; index++) {
+		userLists += userList;
 	}
+	return userLists;
+}
 
-	function userDetailsPlaceholderLoading() {
-		return `
+function userDetailsPlaceholderLoading() {
+	return `
 		<div class="author-chat-name">
 			<div class="auhor-img">
 				<div class="auhor-detailing">
@@ -99,30 +98,31 @@ export default async function chat() {
 		</div>
 		<div class="enrolled-text"><div class="enrolled-text__skeleton __skeleton"></div>
 	`
-	}
+}
 
-	function userMessagePlaceholderLoading() {
-		let messageDiv = `
-			<div class="chat-text chat-text-face2">
-				<div class="chat-img chat-img-face2 img__skeleton __skeleton">
-				</div>
-				<div class="chat-message">
-					<div class="chat-message-name">
-						<div class="username__skeleton __skeleton"></div>
-					</div>    
-					<div class="personal-author-chat">
-					<p class="last_message__skeleton __skeleton"></p>
-					</div>
+function userMessagePlaceholderLoading() {
+	let messageDiv = `
+		<div class="chat-text chat-text-face2">
+			<div class="chat-img chat-img-face2 img__skeleton __skeleton">
+			</div>
+			<div class="chat-message">
+				<div class="chat-message-name">
+					<div class="username__skeleton __skeleton"></div>
+				</div>    
+				<div class="personal-author-chat">
+				<p class="last_message__skeleton __skeleton"></p>
 				</div>
 			</div>
-		`
-		let messageDivs = messageDiv;
-		for (let index = 0; index < 6; index++) {
-			messageDivs += messageDiv;
-		}
-		return messageDivs;
+		</div>
+	`
+	let messageDivs = messageDiv;
+	for (let index = 0; index < 6; index++) {
+		messageDivs += messageDiv;
 	}
+	return messageDivs;
+}
 
+document.addEventListener('routechange', function () {
 
 	var currentChannel;
 	var channels = [];
@@ -727,4 +727,4 @@ export default async function chat() {
 		element.addEventListener('click', () => setCounter(counter + 1))
 		setCounter(0)
 	}
-}
+});

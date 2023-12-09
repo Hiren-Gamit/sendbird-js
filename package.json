@@ -10,10 +10,13 @@
     "host": "vite --host"
   },
   "devDependencies": {
+    "sass": "^1.69.5",
     "vite": "^4.4.5"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "@sendbird/chat": "^4.10.3",
+    "bootstrap": "^5.3.2",
     "moment": "^2.29.4",
     "navigo": "^8.11.1"
   }
