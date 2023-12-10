@@ -51,7 +51,7 @@ const sendbirdChat = SendbirdChat.init({
 console.log("Sendbird: ", sendbirdChat)
 
 window.sb = sendbirdChat
-
+window.router = router;
 document.addEventListener('DOMContentLoaded', function () {
 	console.log('DOMContentLoaded event triggered');
 	router.init('/login'); // Set the initial route
