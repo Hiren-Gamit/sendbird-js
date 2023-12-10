@@ -134,35 +134,20 @@ document.addEventListener('routechange', async function () {
 		let messageCollections = [];
 		let myGroupChannels = [];
 
-		let currentUser = '1';
 
-		const url = new URL(location.href);
-		const searchParams = new URLSearchParams(url.search);
+		// const url = new URL(location.href);
+		// const searchParams = new URLSearchParams(url.search);
 
-		if (searchParams.has('id')) {
-			currentUser = searchParams.get('id').toString();
-		}
-		console.log(currentUser, url)
+		// if (searchParams.has('id')) {
+		// 	currentUser = searchParams.get('id').toString();
+		// }
+		// console.log(currentUser, url)
 
 		// get Instance of Sendbird SDK.
 		const sendbirdChat = window.sb;
 		console.log(sendbirdChat, sendbirdChat.currentUser)
 		if (!sendbirdChat.currentUser) {
-			try {
-				// Connect user in Sendbird
-				const user = await sendbirdChat.connect(currentUser);
-				// Update User Info in SendBird
-				const userUpdateParams = {
-					nickname: "Hiren Gamit",
-				};
-				await sendbirdChat.updateCurrentUserInfo(userUpdateParams);
-				console.log(user);
-				sendbirdChat.setChannelInvitationPreference(true);
-
-			} catch (err) {
-				// Handle error.
-				console.log(err)
-			}
+			window.router?.setRoute('/login');
 		}
 		// For Unique Handler Id
 		const getUniqueHandlerId = () => {
