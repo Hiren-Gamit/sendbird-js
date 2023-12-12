@@ -17,7 +17,7 @@ import {
 } from '@sendbird/chat/message';
 
 import constant from './constant'
-
+import { Router } from "director";
 // Define content for each page
 const pages = {
 	login: loginPageContent,
