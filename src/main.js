@@ -24,7 +24,7 @@ const sendbirdChat = SendbirdChat.init({
 });
 let userId = localStorage.getItem('userId')
 if(userId) {
-    await sendbirdChat.connect(userId.toString());
+    connectUserInSendbirdChat(userId.toString());
 }
 window.sb = sendbirdChat
 console.log("window.sb = sendbirdChat", window.sb);
@@ -38,6 +38,10 @@ window.router = router;
 console.log(sendbirdChat.currentUser);
 (sendbirdChat?.currentUser) ? router.navigateTo('chat') : router.navigateTo('login');
 
+
+async function connectUserInSendbirdChat(userId) {
+    await sendbirdChat.connect(userId);
+}
 // window.addEventListener('popstate', () => {
 //     router._loadInitialRoute();
 // });
