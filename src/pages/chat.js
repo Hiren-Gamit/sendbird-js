@@ -10,14 +10,17 @@ import {
 	MessageFilter
 } from '@sendbird/chat/groupChannel';
 
-import './style.css'
 import moment from "moment/moment";
+import { userListsPlaceholderLoading, 
+	userDetailsPlaceholderLoading, 
+	userMessagePlaceholderLoading
+} from '../util';
 
 export default async function chatPageContent() {
 	document.getElementById('app').innerHTML = `
 		<div class="">
 			<div class="row">
-				<div class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3">
+				<div class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-3 author-message-lits" id="message-section-list">
 					<div class="row message-heading">
 						<h3 id="message-heading">Message</h3>
 					</div>
@@ -61,68 +64,18 @@ export default async function chatPageContent() {
 		</div>
 	`;
 
-	function userListsPlaceholderLoading() {
-		let userList = `
-			<div class="user-name-list user-name-list-face2">
-				<div class="author-name-details">
-					<div class="author-img img__skeleton __skeleton"></div>
-					<div class="author-name">
-						<div class="author-username username__skeleton __skeleton"></div>
-						<p id="last_message" class="last_message__skeleton __skeleton"></p>		
-					</div>
-				</div>
-			</div>
-		`;
+	const sendbirdChat = window.sb;
+    const router = window.router;
 
-		let userLists = userList;
-		for (let index = 0; index < 6; index++) {
-			userLists += userList;
-		}
-		return userLists;
-	}
+    if (!sendbirdChat) {
+        console.error("SendbirdChat instance not available");
+        return;
+    }
 
-	function userDetailsPlaceholderLoading() {
-		return `
-			<div class="author-chat-name">
-				<div class="auhor-img">
-					<div class="auhor-detailing">
-						<h3 id="group_name" class="userDetail_userName__skeleton __skeleton"></h3>
-						<p id="online-offline-status" class="online-offline-status__skeleton __skeleton"></p>
-					</div>
-					<div class="auhor-details">
-						<div class="p-number phone_number__skeleton" id="targetauhor-details-info">
-							<h5 class="__skeleton"></h5>
-							<p class="__skeleton"></p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="enrolled-text"><div class="enrolled-text__skeleton __skeleton"></div>
-		`
-	}
-
-	function userMessagePlaceholderLoading() {
-		let messageDiv = `
-			<div class="chat-text chat-text-face2">
-				<div class="chat-img chat-img-face2 img__skeleton __skeleton">
-				</div>
-				<div class="chat-message">
-					<div class="chat-message-name">
-						<div class="username__skeleton __skeleton"></div>
-					</div>    
-					<div class="personal-author-chat">
-					<p class="last_message__skeleton __skeleton"></p>
-					</div>
-				</div>
-			</div>
-		`
-		let messageDivs = messageDiv;
-		for (let index = 0; index < 6; index++) {
-			messageDivs += messageDiv;
-		}
-		return messageDivs;
-	}
-
+    // if (!sendbirdChat.currentUser) {
+    //     console.warn("No current user. Redirecting to login.");
+    //     router?.navigateTo('login');
+    // }
 	var currentChannel;
 	var channels = [];
 	var channelName = '';
@@ -133,6 +86,7 @@ export default async function chatPageContent() {
 	let myGroupChannels = [];
 	let isFirst = false;
 	let daysdiffFirst;
+	let isMobile = false;
 
 	// const url = new URL(location.href);
 	// const searchParams = new URLSearchParams(url.search);
@@ -143,11 +97,7 @@ export default async function chatPageContent() {
 	// console.log(currentUser, url)
 
 	// get Instance of Sendbird SDK.
-	const sendbirdChat = window.sb;
-	console.log("Chat", sendbirdChat)
-	if (!sendbirdChat?.currentUser) {
-		window.router?.navigateTo('login');
-	}
+
 	// For Unique Handler Id
 	const getUniqueHandlerId = () => {
 		return (Math.random() + 1).toString(36).substring(7);
@@ -155,11 +105,11 @@ export default async function chatPageContent() {
 
 	// GET:  Group channel by Chennel URL
 	const getGroupChannel = async (channelUri) => {
-		return await sendbirdChat.groupChannel.getChannel(channelUri);
+		return await sendbirdChat?.groupChannel.getChannel(channelUri);
 	}
 
 	const getReceiverMember = async (channel) => {
-		return (channel.members[0].userId != sendbirdChat.currentUser.userId) ? channel.members[0] : channel.members[1];
+		return (channel.members[0].userId != sendbirdChat?.currentUser.userId) ? channel.members[0] : channel.members[1];
 	}
 
 	// To check channel is archived or not
@@ -180,7 +130,7 @@ export default async function chatPageContent() {
 	// groupChannelFilter.publicChannelFilter  = PublicChannelFilter.PUBLIC; // Retrieve public group channels. Optional.
 	groupChannelFilter.myMemberStateFilter = MyMemberStateFilter.ALL;
 
-	const groupChannelCollection = sendbirdChat.groupChannel.createGroupChannelCollection({
+	const groupChannelCollection = sendbirdChat?.groupChannel.createGroupChannelCollection({
 		filter: groupChannelFilter,
 		order: GroupChannelListOrder.LATEST_LAST_MESSAGE,
 	});
@@ -361,7 +311,7 @@ export default async function chatPageContent() {
 
 		$(".author-chat-name").append(`
 			<div class="open-profile">
-				<div class="back-to-main"><img width="30" height="30" src="https://img.icons8.com/flat-round/64/info.png" alt="info"/></div>
+				<div class="back-to-main"><img width="30" height="30" src="https://img.icons8.com/ios-glyphs/30/circled-chevron-left.png" alt="circled-chevron-left" /></div>
 				<div class="auhor-img">
 					<div class="group_cover-img" id="group_cover-img">
 					${(coverUrl) ?
@@ -655,11 +605,32 @@ export default async function chatPageContent() {
 	}
 
 	$(document).on('click', '.user-name-list', async function () {
+		if (isMobile) { $("#chat-section").show(); $("#messageLists").hide(); }
 		var channelUrl = $(this).children().data("channel_url");
 		// await handleJoinChannel(channelUrl)
 		changeChannel($(this), channelUrl, "chat")
 		$('#message-text').val('');
 	})
+
+	$(document).on('click', '.back-to-main', function() {
+        $(".author-chat-name").removeClass('author-chat-name-active');
+        $(".author-chat").removeClass('add-z-index')
+        $(".author-message-lits").removeClass('message-z-index')
+        $(".chat").removeClass('chat-active')
+    })
+
+	$(document).on('click', ".auhor-details-close", function () {
+        $(".author-chat").addClass('add-z-index-none')
+        $(".author-chat").removeClass('add-z-index')
+        $(".author-message-lits").removeClass('message-z-index')
+    })
+
+	$(document).ready(function () {
+		isMobile = (/android|webos|iphone|ipad|ipod|blackberry/i.test(navigator.userAgent.toLowerCase()));
+		if (isMobile) {
+			$("#chat-section").hide();
+		}
+	});
 
 	function setupCounter(element) {
 		let counter = 0

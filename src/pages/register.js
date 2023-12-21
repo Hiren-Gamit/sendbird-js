@@ -1,5 +1,4 @@
-import constant from "./constant";
-import { fetchUsers, fetchUserById, createUser } from "./apiService";
+import { fetchUserById, createUser } from "../lib/apiService";
 
 export default function registerPageContent () {
     document.getElementById('app').innerHTML = `
@@ -81,8 +80,9 @@ export default function registerPageContent () {
                 console.log(user)
                 try {
                     // Connect user in Sendbird
-                    await sendbirdChat.connect(user.user_id);    
-                    window.router.nevigetTo('chat')      
+                    await sendbirdChat.connect(user.user_id);
+                    localStorage.setItem('userId', user.user_id);    
+                    window.router.navigateTo('chat')      
                 } catch (err) {
                     console.error('Error fetching users:', err);
                     $("#wrongLoginAlert").removeClass("d-none")

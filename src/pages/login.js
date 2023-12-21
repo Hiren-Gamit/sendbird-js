@@ -1,7 +1,6 @@
-import { fetchUserById } from './apiService';
-import constant from './constant'
+import { fetchUserById } from '../lib/apiService';
+
 export default function loginPageContent() {
-    console.log("Login")
     document.getElementById('app').innerHTML = `
     <section> 
         <div class="signin">
@@ -45,6 +44,7 @@ export default function loginPageContent() {
                     try {
                         // Connect user in Sendbird
                         await sendbirdChat.connect(user.user_id);
+                        localStorage.setItem('userId', user.user_id);
                         window.router.navigateTo('chat');          
                     } catch (err) {
                         console.error('Error fetching users:', err);
