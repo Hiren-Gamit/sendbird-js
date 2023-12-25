@@ -61,6 +61,9 @@ export default async function chatPageContent() {
 				
 				
 			</div>
+			<md-fab aria-label="Edit">
+				<md-icon slot="icon">edit</md-icon>
+			</md-fab>
 		</div>
 	`;
 

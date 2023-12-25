@@ -1,3 +1,8 @@
+// import '@material/web/button/internal/
+import '@material/web/fab/fab.js';
+import '@material/web/icon/icon.js';
+import '@material/web/fab/_fab.scss';
+
 import SendbirdChat from "@sendbird/chat";
 import {
     GroupChannelModule,
