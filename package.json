@@ -1,0 +1,23 @@
+{
+  "name": "sendbird-js",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "host": "vite --host"
+  },
+  "devDependencies": {
+    "sass": "^1.69.5",
+    "vite": "^4.4.5"
+  },
+  "dependencies": {
+    "@material/web": "^1.1.1",
+    "@popperjs/core": "^2.11.8",
+    "@sendbird/chat": "^4.10.3",
+    "bootstrap": "^5.3.2",
+    "moment": "^2.29.4"
+  }
+}
