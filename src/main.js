@@ -1,7 +1,7 @@
 // import '@material/web/button/internal/
 import '@material/web/fab/fab.js';
 import '@material/web/icon/icon.js';
-import '@material/web/fab/_fab.scss';
+import '../app.scss';
 
 import SendbirdChat from "@sendbird/chat";
 import {
@@ -27,30 +27,37 @@ const sendbirdChat = SendbirdChat.init({
     localCacheEnabled: true,
     modules: [new GroupChannelModule(), new MessageModule]
 });
-let userId = localStorage.getItem('userId')
-if(userId) {
-    connectUserInSendbirdChat(userId.toString());
+
+const router = new Router(routes); 
+
+async function main() {
+    let userId = localStorage.getItem('userId')
+    console.log(userId)
+    if (userId) {
+        console.log("hgello")
+        await connectUserInSendbirdChat(userId.toString());
+    }
+    window.sb = sendbirdChat
+    console.log("window.sb = sendbirdChat", window.sb);
+    console.log("Sendbird: ", sendbirdChat)
+    
+    console.log(router);
+
+    window.router = router;
+    console.log(sendbirdChat.currentUser);
+    (sendbirdChat?.currentUser) ? router.navigateTo('chat') : router.navigateTo('login');
+
+   
+    // window.addEventListener('popstate', () => {
+    //     router._loadInitialRoute();
+    // });
+
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     console.log('DOMContentLoaded event triggered');
+    // });
 }
-window.sb = sendbirdChat
-console.log("window.sb = sendbirdChat", window.sb);
-console.log("Sendbird: ", sendbirdChat)
-
-
-const router = new Router(routes);
-console.log(router);
-
-window.router = router;
-console.log(sendbirdChat.currentUser);
-(sendbirdChat?.currentUser) ? router.navigateTo('chat') : router.navigateTo('login');
-
 
 async function connectUserInSendbirdChat(userId) {
     await sendbirdChat.connect(userId);
-}
-// window.addEventListener('popstate', () => {
-//     router._loadInitialRoute();
-// });
-
-// document.addEventListener('DOMContentLoaded', function () {
-//     console.log('DOMContentLoaded event triggered');
-// });
+} 
+main();
